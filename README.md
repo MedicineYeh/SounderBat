@@ -26,6 +26,14 @@ SounderBat
 5. Run `node app` in repository folder.
 
 
+### Tutorial of Programing HTML5 game
+* [Game Machine](http://gamemechanicexplorer.com/)
+* [lessmilk](http://blog.lessmilk.com/make-html5-games-with-phaser-1/)
+* [Phaser Example](https://github.com/photonstorm/phaser-examples)
+
+
+Images and game-code framework are all from [Game Machine](http://gamemechanicexplorer.com/)
+
 ### License
 
 [MIT License](http://opensource.org/licenses/MIT)
