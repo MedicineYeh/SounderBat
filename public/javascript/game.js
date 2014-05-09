@@ -11,7 +11,7 @@ GameState.prototype.preload = function() {
 	this.game.load.image('bullet', '/assets/gfx/bullet.png');
 	this.game.load.image('ground', '/assets/gfx/ground.png');
 	this.game.load.spritesheet('explosion', '/assets/gfx/explosion.png', 128, 128);
-	this.game.load.image('monster', '/assets/gfx/moster.png');
+	this.game.load.image('monster', '/assets/gfx/monster.png');
 };
 
 // Setup the example
