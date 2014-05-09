@@ -1,2 +1,5 @@
 # modules installed from bower
 public/lib*
+
+# log files
+*.log
