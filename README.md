@@ -11,6 +11,7 @@ SounderBat
 
 * [Node.js](http://nodejs.org)
 * [Bower](http://bower.io)
+* [Grunt](http://gruntjs.com/)
 
 ### Major Dependencies and References
 
@@ -21,11 +22,12 @@ SounderBat
 
 ### Installation and Running
 
-1. Install Node.js ; and use `npm install -g bower` to install Bower.
-2. Clone this repository.
-3. Run `npm install` in repository folder.
-4. Run `bower install` in repository folder.
-5. Run `grunt` in repository folder.
+1. Install Node.js ; and use `sudo npm install -g bower` to install Bower.
+2. Use `sudo npm install -g grunt-cli` to install grunt.
+3. Clone this repository.
+4. Run `npm install` in repository folder.
+5. Run `bower install` in repository folder.
+6. Run `grunt` in repository folder.
 
 
 ### Tutorial of Programing HTML5 game
