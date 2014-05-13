@@ -5,6 +5,7 @@ SounderBat
 ### Features
 
 * Move and shoot
+* https 
 
 ### Requirements
 
@@ -16,6 +17,7 @@ SounderBat
 * [Express](http://expressjs.com)
 * [Angular.js](http://angularjs.org)
 * [Phaser](https://github.com/photonstorm/phaser)
+* [jQuery](https://github.com/jquery/jquery)
 
 ### Installation and Running
 
@@ -23,7 +25,7 @@ SounderBat
 2. Clone this repository.
 3. Run `npm install` in repository folder.
 4. Run `bower install` in repository folder.
-5. Run `node app` in repository folder.
+5. Run `grunt` in repository folder.
 
 
 ### Tutorial of Programing HTML5 game
