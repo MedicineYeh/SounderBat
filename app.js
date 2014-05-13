@@ -2,15 +2,12 @@ var http = require("http");
 var express = require("express");
 var app = express();
 var fs = require("fs");
-var mysql = require('mysql');
 var publicPath = "./public";
-var bodyParser = require('body-parser');
 
 app.set('views', __dirname);
 app.set('view engine', 'html');
 
 //app.use(express.static(publicPath));
-app.use(bodyParser());
 app.use(express.static(publicPath));
 
 app.get('/', function(request, response) {
