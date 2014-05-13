@@ -5,6 +5,7 @@ SounderBat
 ### Features
 
 * Move and shoot
+* Score Board
 
 ### Requirements
 
