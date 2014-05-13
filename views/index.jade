@@ -1,0 +1,55 @@
+extends layout
+block content
+  script
+    function HTML_content_change(index)
+    {
+      $("#l1").removeClass("active");
+      console.log(index);
+      switch(index)
+        {
+          case '_home':
+              
+            alert(index);
+            break;
+          case '_play':
+            alert(index);
+            break;
+          case '_about':
+            alert(index);
+            break;
+          case '_contact':
+            alert(index);
+            break;
+          defaule:
+            alert(index);
+            break;
+        }
+    }
+  div(class="container")
+    div(class="masthead")
+      h2(class="text-muted") Shout2Play
+      ul(class="nav nav-justified")
+        li(id="l1",class="active")
+          a(href='javascript:HTML_content_change("$this");') Home
+        li(id="l2")
+          a(href='javascript:HTML_content_change("_play");') Play
+        li
+          a(href='javascript:HTML_content_change("_about");') About
+        li
+          a(href='javascript:HTML_content_change("_contact");') Contact
+    br
+    div(class="row row-officanvas row-offcanvas-right")#HTML_content
+      //for GAME
+      div(class="col-xs-12 col-sm-9",id="game", style="overflow: hidden;")
+      //for Score List
+      div(class="col-xs-6 col-sm-3 sidebar-offcanvas",role="navigation")
+        div(class="list-group")
+          a(class="list-group-item active") Score
+          p(class="list-group-item") Score
+          p(class="list-group-item") Score
+          p(class="list-group-item") Score
+          p(class="list-group-item") Score
+          p(class="list-group-item") Score
+          p(class="list-group-item") Score
+          p(class="list-group-item") Score
+          p(class="list-group-item") Score

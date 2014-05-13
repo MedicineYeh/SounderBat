@@ -1,10 +1,16 @@
 {
-    "name": "SounderBat",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "angular": "latest",
-        "phaser": "latest",
-        "bootstrap": "latest"
-    }
+  "name": "SounderBat",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "angular": "latest",
+    "phaser": "latest",
+    "bootstrap": "latest",
+    "jquery": "latest"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
 }

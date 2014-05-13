@@ -1,5 +1,10 @@
 # modules installed from bower
-public/lib*
+public/components/*
+# modules installed from npm
+node_modules/*
+
+# openSSL key file
+csr.pem
 
 # log files
 *.log

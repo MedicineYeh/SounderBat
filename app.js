@@ -1,26 +1,43 @@
-var http = require("http");
-var express = require("express");
+
+/**
+ * Module dependencies.
+ */
+
+var express = require('express')
+  , routes = require('./routes')
+  , user = require('./routes/user')
+  , fs = require('fs')
+  , publicPath = './public'
+  , https = require('https')
+  , path = require('path');
+
+var options = {
+  key : fs.readFileSync('key.pem') ,
+  cert: fs.readFileSync('cert.pem')
+};
+
+
 var app = express();
-var fs = require("fs");
-var publicPath = "./public";
 
-app.set('views', __dirname);
-app.set('view engine', 'html');
-
-//app.use(express.static(publicPath));
-app.use(express.static(publicPath));
-
-app.get('/', function(request, response) {
-	var filePath = './index.html';
-    var stat = fs.statSync(filePath);
-
-	response.writeHead(200, {'Content-Type':'text/html'});
-    
-    var readStream = fs.createReadStream(filePath);
-    // We replaced all the event handlers with a simple call to readStream.pipe()
-	readStream.pipe(response);
+app.configure(function(){
+  app.set('port', process.env.PORT || 3000);
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+  app.use(express.favicon());
+  app.use(express.logger('dev'));
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+  app.use(express.static(path.join(__dirname, 'public')));
 });
 
-http.createServer(app).listen(3000);
+app.configure('development', function(){
+  app.use(express.errorHandler());
+});
 
-console.log('Server is running...');
+app.get('/', routes.index);
+app.get('/users', user.list);
+
+https.createServer(options , app).listen(app.get('port'), function(){
+  console.log("Express server listening on port " + app.get('port'));
+});
