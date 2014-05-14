@@ -30,10 +30,12 @@ function gameStart()
 {
 	gameState = GAME_PLAY;
 	clearScore();
+	game.state.start('game_play');
 }
 
 function gameBegin()
 {
 	gameState = GAME_BEGIN;
+	game.state.start('game_menu');
 }
 //==========================================================
