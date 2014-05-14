@@ -8,10 +8,12 @@ var GameState = function(game) {
 
 // Load images and sounds
 GameState.prototype.preload = function() {
-	this.game.load.image('bullet', '/assets/gfx/bullet.png');
+	this.game.load.spritesheet('player', '/assets/BigG.png', 400, 311);
+	this.game.load.spritesheet('bullet', '/assets/ball.png', 300, 292);
 	this.game.load.image('ground', '/assets/gfx/ground.png');
 	this.game.load.spritesheet('explosion', '/assets/gfx/explosion.png', 128, 128);
-	this.game.load.image('monster', '/assets/gfx/monster.png');
+	this.game.load.spritesheet('monster', '/assets/bird.png', 300, 600);
+	this.game.load.spritesheet('sky', '/assets/background.png', 450, 450);
 };
 
 // Setup the example
@@ -19,23 +21,35 @@ GameState.prototype.create = function() {
 	// Set stage background color
 	this.game.stage.backgroundColor = 0x4488cc;
 
+	//Background of our game
+	this.sky = game.add.sprite(0, 0, 'sky');
+	this.sky.scale.setTo(this.game.world.width / this.sky.width, this.game.world.height / this.sky.height);
+	this.sky.animations.add('windy', [0,1,2,3], 2, true);
+	this.sky.animations.play('windy');
+	
 	// Define constants
 	this.SHOT_DELAY = 200; // milliseconds (10 bullets/second)
 	this.BULLET_SPEED = 500; // pixels/second
 	this.NUMBER_OF_BULLETS = 20;
-	this.GUN_MOVE_SPEED = 400;
+	this.PLAYER_MOVE_SPEED = 400;
 	this.ENEMY_DELAY = 500; // milliseconds (10 bullets/second)
 	this.ENEMY_SPEED = 500; // pixels/second
 	this.NUMBER_OF_ENEMIES = 20;
 
-	// Create an object representing our gun
-	this.gun = this.game.add.sprite(this.game.width / 2, this.game.height - 32, 'bullet');
+	// Create an object representing our player
+	this.player = this.game.add.sprite(this.game.width - 4, this.game.height / 2, 'player');
+	this.player.scale.setTo(0.4, 0.4);
 
 	// Enable physics on the player
-	this.game.physics.enable(this.gun, Phaser.Physics.ARCADE);
+	this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
 
-	// Set the pivot point to the center of the gun
-	this.gun.anchor.setTo(0.5, 0.5);
+	// Set the pivot point to the center of the player
+	this.player.anchor.setTo(1, 0.5);
+
+	//Set immovable to character
+	this.player.body.immovable = true;
+
+	this.player.animations.add('strike', [0,1,2,3], 10, false);
 
 	// Capture certain keys to prevent their default actions in the browser.
 	// This is only necessary because this is an HTML5 game. Games on other
@@ -52,6 +66,9 @@ GameState.prototype.create = function() {
 	for(var i = 0; i < this.NUMBER_OF_BULLETS; i++) {
 		// Create each bullet and add it to the group.
 		var bullet = this.game.add.sprite(0, 0, 'bullet');
+		bullet.scale.setTo(0.1, 0.1);
+		bullet.animations.add('rotate', [0,1,2], 10, true);
+
 		this.bulletPool.add(bullet);
 
 		// Set its pivot point to the center of the bullet
@@ -67,13 +84,13 @@ GameState.prototype.create = function() {
 	//Create walls to restrict move range
 	this.walls = this.game.add.group();
 	// Add the ground blocks, enable physics on each, make them immovable
-	var wallBlock = this.game.add.sprite(-18, this.game.height - 32, 'ground');
+	var wallBlock = this.game.add.sprite(this.game.width - 32, -48, 'ground');
 	wallBlock.anchor.setTo(0.5, 0.5);
 	this.game.physics.enable(wallBlock, Phaser.Physics.ARCADE);
 	wallBlock.body.immovable = true;
 	wallBlock.body.allowGravity = false;
 	this.walls.add(wallBlock);
-	var wallBlock = this.game.add.sprite(this.game.width + 18, this.game.height - 32, 'ground');
+	var wallBlock = this.game.add.sprite(this.game.width - 32, this.game.height + 36, 'ground');
 	wallBlock.anchor.setTo(0.5, 0.5);
 	this.game.physics.enable(wallBlock, Phaser.Physics.ARCADE);
 	wallBlock.body.immovable = true;
@@ -87,7 +104,9 @@ GameState.prototype.create = function() {
 	this.enemyPool = this.game.add.group();
 	for(var i = 0; i < this.NUMBER_OF_ENEMIES; i++) {
 		// Create each enemy and add it to the group.
-		var enemy = this.game.add.sprite(0, 0, 'bullet');
+		var enemy = this.game.add.sprite(0, 0, 'monster');
+		enemy.scale.setTo(0.3, 0.3);
+		enemy.animations.add('fly', [0,1], 5, true);
 		this.enemyPool.add(enemy);
 
 		// Set its pivot point to the center of the enemy
@@ -104,7 +123,7 @@ GameState.prototype.create = function() {
 	// Show FPS
 	this.game.time.advancedTiming = true;
 	this.fpsText = this.game.add.text(
-			20, 20, '', { font: '16px Arial', fill: '#ffffff' }
+			20, 20, '', { font: '18px Arial', fill: '#254117' }
 			);
 };
 
@@ -134,12 +153,16 @@ GameState.prototype.shootBullet = function() {
 	bullet.checkWorldBounds = true;
 	bullet.outOfBoundsKill = true;
 
-	// Set the bullet position to the gun position.
-	bullet.reset(this.gun.x, this.gun.y);
+	// Set the bullet position to the player position.
+	bullet.reset(this.player.x, this.player.y);
 
 	// Shoot it
-	bullet.body.velocity.x = 0;
-	bullet.body.velocity.y = -this.BULLET_SPEED;
+	bullet.body.velocity.x = -this.BULLET_SPEED;
+	bullet.body.velocity.y = 0;
+
+	//Animate it
+	bullet.animations.play('rotate');
+	this.player.animations.play('strike');
 };
 
 GameState.prototype.shootEnemy = function() {
@@ -167,18 +190,38 @@ GameState.prototype.shootEnemy = function() {
 	enemy.checkWorldBounds = true;
 	enemy.outOfBoundsKill = true;
 
-	// Set the bullet position to the gun position.
-	enemy.reset(Math.floor((Math.random() * (this.game.width - 60))), 30);
+	// Set the bullet position to the player position.
+	enemy.reset(30, Math.floor((Math.random() * (this.game.height - 60)) + 30.0));
 
 	// Shoot it
-	enemy.body.velocity.x = 0;
-	enemy.body.velocity.y = this.ENEMY_SPEED;
+	enemy.body.velocity.x = this.ENEMY_SPEED;
+	enemy.body.velocity.y = 0;
+
+	//Animate it
+	enemy.animations.play('fly');
 };
 
 // The update() method is called every frame
 GameState.prototype.update = function() {
+	if (gameState == GAME_BEGIN) {
+		//Start the game
+		if (this.game.input.activePointer.isDown || this.spaceInputIsActive()) {
+			gameStart();
+			this.player.revive();
+		}
+		return ;
+	}
+
+	if (gameState == GAME_OVER) {
+		//Start the game
+		if (this.game.input.activePointer.isDown || this.spaceInputIsActive()) {
+			gameBegin();
+		}
+		return ;
+	}
+
 	if (this.game.time.fps !== 0) {
-		this.fpsText.setText(this.game.time.fps + ' FPS');
+		this.fpsText.setText(this.game.time.fps + ' FPS' + ' Score:' + score);
 	}
 
 	// Shoot a bullet
@@ -189,28 +232,45 @@ GameState.prototype.update = function() {
 	// Shoot an enemy
 	this.shootEnemy();
 
-	// Check if bullets have collided with the ground
+	// Check if bullets have collided with the enemy
 	this.game.physics.arcade.collide(this.bulletPool, this.enemyPool, function(bullet, enemy) {
 		// Create an explosion
 		this.getExplosion(bullet.x, bullet.y);
+
+		//Count score
+		hitEnemy();
 
 		// Kill the bullet
 		bullet.kill();
 		enemy.kill();
 	}, null, this);
 
-	// Collide the player with the ground
-	this.game.physics.arcade.collide(this.gun, this.walls);
 
-	if (this.leftInputIsActive()) {
+	// Check if player have collided with the enemy
+	this.game.physics.arcade.collide(this.player, this.enemyPool, function(player, enemy) {
+		// Create an explosion
+		this.getExplosion(player.x, player.y);
+
+		//Count score
+		hitPlayer();
+
+		// Kill the bullet
+		player.kill();
+		enemy.kill();
+	}, null, this);
+
+	// Collide the player with the ground
+	this.game.physics.arcade.collide(this.player, this.walls);
+
+	if (this.upInputIsActive()) {
 		// If the LEFT key is down, set the player velocity to move left
-		this.gun.body.velocity.x = -this.GUN_MOVE_SPEED;
-	} else if (this.rightInputIsActive()) {
+		this.player.body.velocity.y = -this.PLAYER_MOVE_SPEED;
+	} else if (this.downInputIsActive()) {
 		// If the RIGHT key is down, set the player velocity to move right
-		this.gun.body.velocity.x = this.GUN_MOVE_SPEED;
+		this.player.body.velocity.y = this.PLAYER_MOVE_SPEED;
 	} else {
 		// Stop the player from moving horizontally
-		this.gun.body.velocity.x = 0;
+		this.player.body.velocity.y = 0;
 	}
 };
 
@@ -218,10 +278,10 @@ GameState.prototype.update = function() {
 // This function should return true when the player activates the "go left" control
 // In this case, either holding the right arrow or tapping or clicking on the left
 // side of the screen.
-GameState.prototype.leftInputIsActive = function() {
+GameState.prototype.upInputIsActive = function() {
 	var isActive = false;
 
-	isActive = this.input.keyboard.isDown(Phaser.Keyboard.LEFT);
+	isActive = this.input.keyboard.isDown(Phaser.Keyboard.UP);
 
 	return isActive;
 };
@@ -230,10 +290,10 @@ GameState.prototype.leftInputIsActive = function() {
 // This function should return true when the player activates the "go right" control
 // In this case, either holding the right arrow or tapping or clicking on the right
 // side of the screen.
-GameState.prototype.rightInputIsActive = function() {
+GameState.prototype.downInputIsActive = function() {
 	var isActive = false;
 
-	isActive = this.input.keyboard.isDown(Phaser.Keyboard.RIGHT);
+	isActive = this.input.keyboard.isDown(Phaser.Keyboard.DOWN);
 
 	return isActive;
 };
@@ -290,5 +350,5 @@ GameState.prototype.getExplosion = function(x, y) {
 	return explosion;
 };
 
-var game = new Phaser.Game(450, 848, Phaser.AUTO, 'game');
+var game = new Phaser.Game(800, 400, Phaser.AUTO, 'game');
 game.state.add('game', GameState, true);

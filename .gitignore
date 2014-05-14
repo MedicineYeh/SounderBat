@@ -6,5 +6,8 @@ node_modules/*
 # openSSL key file
 csr.pem
 
+#MAC Backup files
+*.DS_Store
+
 # log files
 *.log
