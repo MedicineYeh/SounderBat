@@ -36,12 +36,9 @@ SounderBat
 * [Phaser Example](https://github.com/photonstorm/phaser-examples)
 
 
-Images and game-code framework are all from [Game Machine](http://gamemechanicexplorer.com/)
-
-
+Some Images and game-code framework are all from [Game Machine](http://gamemechanicexplorer.com/)
 
 ### License
 
 [MIT License](http://opensource.org/licenses/MIT)
-
 
