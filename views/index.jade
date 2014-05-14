@@ -3,16 +3,20 @@ block content
   script
     function HTML_content_change(index)
     {
-      $("#l1").removeClass("active");
-      console.log(index);
+      $("li").siblings().removeClass("active");
       switch(index)
         {
           case '_home':
-              
-            alert(index);
+            $("#HTML_content").html("");
+            $("#HTML_content").html("HELLO");        
+            //alert(index);
             break;
           case '_play':
-            alert(index);
+            $("#HTML_content").html("");
+            content = '<div id="game" style="overflow: hidden;"><\/div>' + 
+            '<script src="/js/game.js">' + '<\/script>';
+            $("#HTML_content").html(content);
+            //alert(index);
             break;
           case '_about':
             alert(index);
@@ -24,32 +28,28 @@ block content
             alert(index);
             break;
         }
+        $("#"+index).addClass("active");
     }
   div(class="container")
     div(class="masthead")
       h2(class="text-muted") Shout2Play
       ul(class="nav nav-justified")
-        li(id="l1",class="active")
-          a(href='javascript:HTML_content_change("$this");') Home
-        li(id="l2")
+        li(id="_home",class="active")
+          a(href='javascript:HTML_content_change("_home");') Home
+        li(id="_play")
           a(href='javascript:HTML_content_change("_play");') Play
-        li
+        li(id="_about")
           a(href='javascript:HTML_content_change("_about");') About
-        li
+        li(id="_contact")
           a(href='javascript:HTML_content_change("_contact");') Contact
     br
-    div(class="row row-officanvas row-offcanvas-right")#HTML_content
-      //for GAME
-      div(class="col-xs-12 col-sm-9",id="game", style="overflow: hidden;")
-      //for Score List
-      div(class="col-xs-6 col-sm-3 sidebar-offcanvas",role="navigation")
+    div(class="row row-officanvas row-offcanvas-right")
+      div(class="col-xs-12 col-sm-9", style="overflow: hidden;")#HTML_content
+      div(class="col-xs-6 col-sm-3 sidebar-offcanvas ", role="navigation")
         div(class="list-group")
           a(class="list-group-item active") Score
           p(class="list-group-item") Score
           p(class="list-group-item") Score
+        //for(i=1;i<5;i++)
           p(class="list-group-item") Score
-          p(class="list-group-item") Score
-          p(class="list-group-item") Score
-          p(class="list-group-item") Score
-          p(class="list-group-item") Score
-          p(class="list-group-item") Score
+             
