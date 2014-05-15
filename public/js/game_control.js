@@ -39,3 +39,14 @@ function gameBegin()
 	game.state.start('game_menu');
 }
 //==========================================================
+
+//Speech Recognition
+recognition = null;
+isSpeechShoot = false;
+isSpeechUp = false;
+isSpeechDown = false;
+isSpeechBomb = false;
+
+shoot_words = ['shoot','suit','soup','s\\*','tits'];
+up_words = ['up','pop','hot','op','hop','app','hub','Apple','up','cop'];
+down_words = ['down','song','dial','dong','town','Dow','Don','thong','phone'];

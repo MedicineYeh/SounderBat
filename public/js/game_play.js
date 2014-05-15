@@ -3,6 +3,7 @@
 // Copyright © 2014 John Watson, Medicine Yeh
 // Licensed under the terms of the MIT License
 
+
 var GamePlay = function(game) {
 };
 
@@ -15,6 +16,47 @@ GamePlay.prototype.preload = function() {
 	this.game.load.spritesheet('monster', '/assets/bird.png', 300, 314);
 	this.game.load.spritesheet('sky', '/assets/background.png', 450, 450);
 	this.game.load.spritesheet('rock', '/assets/rock.png', 300, 279);
+  
+  //====Speech Recognition Part Start======
+  if(!('webkitSpeechRecognition' in window)){
+    alert("Not Supported");
+  }else{
+    if(recognition == null){
+      recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = "en-US";
+      recognition.start();
+    }
+  }
+  
+  recognition.onresult = function(event){
+    for(var i=event.resultIndex;i<event.results.length;i++){
+      if(event.results[i].isFinal){
+        console.log(event.results[i][0].transcript);
+        isSpeechShoot = check_movement(shoot_words,event.results[i][0].transcript);
+        isSpeechUp = check_movement(up_words,event.results[i][0].transcript);
+        isSpeechDown = check_movement(down_words,event.results[i][0].transcript);
+      }else{
+        console.log(event.results[i][0].transcript);
+        isSpeechShoot = check_movement(shoot_words,event.results[i][0].transcript);
+        isSpeechUp = check_movement(up_words,event.results[i][0].transcript);
+        isSpeechDown = check_movement(down_words,event.results[i][0].transcript);
+      }
+    }
+    recognition.abort();
+  }
+
+  recognition.onend = function(event){
+    var end = new Date();
+    console.log("Waiting Time: "+((end.getTime()-start.getTime())/1000)+" s");
+    recognition.start();
+  }
+
+  recognition.onstart = function(event){
+    start = new Date();
+  }
+  //====Speech Recognition Part End========
 };
 
 // Setup the example
@@ -282,8 +324,9 @@ GamePlay.prototype.update = function() {
 	}
 
 	// Shoot a bullet
-	if (this.game.input.activePointer.isDown || this.spaceInputIsActive()) {
+	if (this.game.input.activePointer.isDown || this.spaceInputIsActive() || isSpeechShoot) {
 		this.shootBullet();
+    isSpeechShoot = false;
 	}
 
 	// Shoot an enemy
@@ -339,13 +382,16 @@ GamePlay.prototype.update = function() {
 
 	// Collide the player with the ground
 	this.game.physics.arcade.collide(this.player, this.walls);
+  
 
-	if (this.upInputIsActive()) {
+	if (this.upInputIsActive() || isSpeechUp) {
 		// If the LEFT key is down, set the player velocity to move left
 		this.player.body.velocity.y = -this.PLAYER_MOVE_SPEED;
-	} else if (this.downInputIsActive()) {
+    isSpeechUp = false;
+	} else if (this.downInputIsActive() || isSpeechDown) {
 		// If the RIGHT key is down, set the player velocity to move right
 		this.player.body.velocity.y = this.PLAYER_MOVE_SPEED;
+    isSpeechDown = false;
 	} else {
 		// Stop the player from moving horizontally
 		this.player.body.velocity.y = 0;
@@ -428,3 +474,13 @@ GamePlay.prototype.getExplosion = function(x, y) {
 	return explosion;
 };
 
+
+//Function for checking
+function check_movement(words, transcript){
+  for(var i=0;i<words.length;i++){
+    if(transcript.search(words[i]) != -1){
+      return true;
+    }
+  }
+  return false;
+}
