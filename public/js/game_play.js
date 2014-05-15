@@ -39,10 +39,13 @@ GamePlay.prototype.create = function() {
 
 	// Create an object representing our player
 	this.player = this.game.add.sprite(this.game.world.width - 4, this.game.world.height / 2, 'player');
-	this.player.scale.setTo(0.25, 0.4);
+	this.player.scale.setTo(0.4, 0.4);
 
 	// Enable physics on the player
 	this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
+
+    this.player.body.width /= 2;
+    this.player.body.height /= 2;
 
 	// Set the pivot point to the center of the player
 	this.player.anchor.setTo(1, 0.5);
@@ -74,6 +77,9 @@ GamePlay.prototype.create = function() {
 
 		// Enable physics on the bullet
 		this.game.physics.enable(bullet, Phaser.Physics.ARCADE);
+
+        bullet.body.width *= 1.5;
+        bullet.body.height *= 1.5;
 
 		// Set its initial state to "dead".
 		bullet.kill();
