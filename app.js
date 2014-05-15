@@ -5,6 +5,7 @@
 
 var express = require('express')
   , routes = require('./routes')
+  , db = require('./routes/db')
   , user = require('./routes/user')
   , fs = require('fs')
   , publicPath = './public'
@@ -37,6 +38,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+app.post('/db', db.query);
 
 https.createServer(options , app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

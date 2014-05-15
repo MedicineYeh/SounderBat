@@ -15,6 +15,16 @@ function hitEnemy()
 function hitPlayer()
 {
 	gameState = GAME_OVER;
+	var name = prompt("Enter your Name :");
+	if(name)
+	  $.post('/db',{"Name":name,"Score":score}, function(data){
+      var content = '';
+      for (i in data){
+        console.log(data[i]);
+        content += '<p class="list-group-item">' + data[i].Name +' : ' + data[i].Score + '</p>';
+      }
+      $("#score_board").html(content); 
+	  });
 }
 
 //==========================================================
