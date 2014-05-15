@@ -386,11 +386,11 @@ GamePlay.prototype.update = function() {
 
 	if (this.upInputIsActive() || isSpeechUp) {
 		// If the LEFT key is down, set the player velocity to move left
-		this.player.body.velocity.y = -this.PLAYER_MOVE_SPEED;
+		this.player.y += -this.game.world.height / 4;
     isSpeechUp = false;
 	} else if (this.downInputIsActive() || isSpeechDown) {
 		// If the RIGHT key is down, set the player velocity to move right
-		this.player.body.velocity.y = this.PLAYER_MOVE_SPEED;
+		this.player.y += this.game.world.height / 4;
     isSpeechDown = false;
 	} else {
 		// Stop the player from moving horizontally
