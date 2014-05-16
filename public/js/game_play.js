@@ -16,47 +16,47 @@ GamePlay.prototype.preload = function() {
 	this.game.load.spritesheet('monster', '/assets/bird.png', 300, 314);
 	this.game.load.spritesheet('sky', '/assets/background.png', 450, 450);
 	this.game.load.spritesheet('rock', '/assets/rock.png', 300, 279);
-  
-  //====Speech Recognition Part Start======
-  if(!('webkitSpeechRecognition' in window)){
-    alert("Not Supported");
-  }else{
-    if(recognition == null){
-      recognition = new webkitSpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = true;
-      recognition.lang = "en-US";
-      recognition.start();
-    }
-  }
-  
-  recognition.onresult = function(event){
-    for(var i=event.resultIndex;i<event.results.length;i++){
-      if(event.results[i].isFinal){
-        console.log(event.results[i][0].transcript);
-        isSpeechShoot = check_movement(shoot_words,event.results[i][0].transcript);
-        isSpeechUp = check_movement(up_words,event.results[i][0].transcript);
-        isSpeechDown = check_movement(down_words,event.results[i][0].transcript);
-      }else{
-        console.log(event.results[i][0].transcript);
-        isSpeechShoot = check_movement(shoot_words,event.results[i][0].transcript);
-        isSpeechUp = check_movement(up_words,event.results[i][0].transcript);
-        isSpeechDown = check_movement(down_words,event.results[i][0].transcript);
-      }
-    }
-    recognition.abort();
-  }
 
-  recognition.onend = function(event){
-    var end = new Date();
-    console.log("Waiting Time: "+((end.getTime()-start.getTime())/1000)+" s");
-    recognition.start();
-  }
+	//====Speech Recognition Part Start======
+	if(!('webkitSpeechRecognition' in window)){
+		alert("Not Supported");
+	}else{
+		if(recognition == null){
+			recognition = new webkitSpeechRecognition();
+			recognition.continuous = false;
+			recognition.interimResults = true;
+			recognition.lang = "en-US";
+			recognition.start();
+		}
+	}
 
-  recognition.onstart = function(event){
-    start = new Date();
-  }
-  //====Speech Recognition Part End========
+	recognition.onresult = function(event){
+		for(var i=event.resultIndex;i<event.results.length;i++){
+			if(event.results[i].isFinal){
+				console.log(event.results[i][0].transcript);
+				isSpeechShoot = check_movement(shoot_words,event.results[i][0].transcript);
+				isSpeechUp = check_movement(up_words,event.results[i][0].transcript);
+				isSpeechDown = check_movement(down_words,event.results[i][0].transcript);
+			}else{
+				console.log(event.results[i][0].transcript);
+				isSpeechShoot = check_movement(shoot_words,event.results[i][0].transcript);
+				isSpeechUp = check_movement(up_words,event.results[i][0].transcript);
+				isSpeechDown = check_movement(down_words,event.results[i][0].transcript);
+			}
+		}
+		recognition.abort();
+	}
+
+	recognition.onend = function(event){
+		var end = new Date();
+		console.log("Waiting Time: "+((end.getTime()-start.getTime())/1000)+" s");
+		recognition.start();
+	}
+
+	recognition.onstart = function(event){
+		start = new Date();
+	}
+	//====Speech Recognition Part End========
 };
 
 // Setup the example
@@ -74,9 +74,9 @@ GamePlay.prototype.create = function() {
 	this.SHOT_DELAY = 200; // milliseconds (10 bullets/second)
 	this.BULLET_SPEED = 500; // pixels/second
 	this.NUMBER_OF_BULLETS = 20;
-	this.PLAYER_MOVE_SPEED = 1000;
-	this.ENEMY_DELAY = 1600; // milliseconds (10 bullets/second)
-	this.ENEMY_SPEED = 250; // pixels/second
+	this.PLAYER_MOVE_SPEED = 500;
+	this.ENEMY_DELAY = 3000; // milliseconds (10 bullets/second)
+	this.ENEMY_SPEED = 100; // pixels/second
 	this.NUMBER_OF_ENEMIES = 20;
 
 	// Create an object representing our player
@@ -92,7 +92,7 @@ GamePlay.prototype.create = function() {
 	// Set the pivot point to the center of the player
 	this.player.anchor.setTo(1, 0.5);
 
-	this.player.animations.add('strike', [0,1,2,3], 10, false);
+	this.player.animations.add('strike', [0,1,2,3,0], 25, false);
 
 	// Capture certain keys to prevent their default actions in the browser.
 	// This is only necessary because this is an HTML5 game. Games on other
@@ -384,17 +384,32 @@ GamePlay.prototype.update = function() {
 	this.game.physics.arcade.collide(this.player, this.walls);
   
 
-	if (this.upInputIsActive() || isSpeechUp) {
+	if (this.upInputIsActive()) {
 		// If the LEFT key is down, set the player velocity to move left
-		this.player.y += -this.game.world.height / 4;
-    isSpeechUp = false;
+		this.player.body.velocity.y = -this.PLAYER_MOVE_SPEED;
 	} else if (this.downInputIsActive() || isSpeechDown) {
 		// If the RIGHT key is down, set the player velocity to move right
-		this.player.y += this.game.world.height / 4;
-    isSpeechDown = false;
+		this.player.body.velocity.y = this.PLAYER_MOVE_SPEED;
 	} else {
 		// Stop the player from moving horizontally
 		this.player.body.velocity.y = 0;
+	}
+
+
+	if (isSpeechUp) {
+		// If the LEFT key is down, set the player velocity to move left
+		this.player.y -= this.game.world.height / 4;
+		isSpeechUp = false;
+		//Bundary Condition
+		if (this.player.y < this.game.world.height)
+			this.player.y += this.game.world.height / 4;
+	} else if (isSpeechDown) {
+		// If the RIGHT key is down, set the player velocity to move right
+		this.player.y += this.game.world.height / 4;
+		isSpeechDown = false;
+		//Bundary Condition
+		if (this.player.y > this.game.world.height)
+			this.player.y -= this.game.world.height / 4;
 	}
 };
 
