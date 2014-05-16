@@ -9,5 +9,8 @@ csr.pem
 #MAC Backup files
 *.DS_Store
 
+# Database file
+db/*
+
 # log files
 *.log

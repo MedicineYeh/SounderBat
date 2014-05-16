@@ -28,10 +28,12 @@ SounderBat
 1. Install MongoDB and Node.js downloaded from their website.
 2. Use `sudo npm install -g bower` to install Bower.
 3. Use `sudo npm install -g grunt-cli` to install grunt.
-4. Clone this repository.
-5. Run `npm install` in repository folder.
-6. Run `bower install` in repository folder.
-7. Run `grunt` in repository folder.
+4. Clone this repository and enter repository folder.
+5. Create directory for database by `mkdir db` in repository folder.
+6. Run `npm install` in repository folder.
+7. Run `bower install` in repository folder.
+8. Run mongodb by using `mongod -dbpath ./db`.
+9. Run `grunt` in repository folder.
 
 
 ### Tutorial of Programing HTML5 game
