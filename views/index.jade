@@ -7,8 +7,9 @@ block content
       switch(index)
         {
           case '_home':
-            $("#HTML_content").html("");
-            $("#HTML_content").html("HELLO");        
+            $.post('/home',"",function(data){
+              $("#HTML_content").html(data);
+            });
             //alert(index);
             break;
           case '_play':
@@ -48,10 +49,20 @@ block content
     br
     div(class="row row-officanvas row-offcanvas-right")
       div(class="col-xs-12 col-sm-9", style="overflow: hidden;")#HTML_content
+        h2 Welcome To coming this page
+        p This is a shooting game, but the different from other shooting is you need to use your voice to control the character
+        h3(class="bg-success") How to Play:
+        p 
+          ul
+            li when you said "TOP", the character will move up
       div(class="col-xs-6 col-sm-3 sidebar-offcanvas ", role="navigation")
         div(class="list-group")
-          a(class="list-group-item active") Name : Score
-          div#score_board
-            for data in score_list
-              p(class="list-group-item") #{data.Name} : #{data.Score}
+          ul(class="list-group-item") 
+            li(class ="list-group-item list-group-item-info") 
+              center 最高紀錄
+            div#score_board
+              for data in score_list
+                li(class="list-group-item list-group-item-warning") 
+                  center #{data.Name} : #{data.Score}
+              //h5(class="list-group-item-text") Score:#{data.Score}
              

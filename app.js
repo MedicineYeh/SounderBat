@@ -9,6 +9,7 @@ var express = require('express')
   , user = require('./routes/user')
   , fs = require('fs')
   , publicPath = './public'
+  , home = require('./routes/home')
   , https = require('https')
   , path = require('path');
 
@@ -39,6 +40,7 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.post('/db', db.query);
+app.post('/home', home.home);
 
 https.createServer(options , app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

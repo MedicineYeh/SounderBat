@@ -21,8 +21,9 @@ function hitPlayer()
     		var content = '';
     		for (i in data){
     			console.log(data[i]);
-    			content += '<p class="list-group-item">' + data[i].Name +' : ' + data[i].Score + '</p>';
+    			content += '<li class="list-group-item list-group-item-warning"><center>' + data[i].Name +' : ' + data[i].Score + '</center></li>';
     		}
+    		console.log(content);
     		$("#score_board").html(content); 
 		});
 	}
