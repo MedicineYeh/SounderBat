@@ -4,7 +4,7 @@ SounderBat
 
 ### Features
 
-* Move and shoot
+* Move, shoot and Boom!
 * Score Board
 * Sound Control
 
