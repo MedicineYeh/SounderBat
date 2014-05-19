@@ -62,4 +62,4 @@ isSpeechBomb = false;
 shoot_words = ['shoot','suit','soup','tits','2','shou*d','shoe','sue'];
 up_words = ['up','pop','hot','op','hop','app','hub','Apple','up','cop','f\\*','pop','top'];
 down_words = ['down','song','dial','dong','town','Dow','Don','thong','s\\*','set','pussy','push'];
-boom_words = ['phone'];
+boom_words = ['phone','boom'];
