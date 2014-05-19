@@ -30,6 +30,11 @@ GamePlay.prototype.preload = function() {
 		}
 	}
 
+	isSpeechShoot = false;
+	isSpeechUp = false;
+	isSpeechDown = false;
+	isSpeechBoom = false;
+
 	recognition.onresult = function(event){
 		for(var i=event.resultIndex;i<event.results.length;i++){
 			if(event.results[i].isFinal){
@@ -37,11 +42,13 @@ GamePlay.prototype.preload = function() {
 				isSpeechShoot = check_movement(shoot_words,event.results[i][0].transcript);
 				isSpeechUp = check_movement(up_words,event.results[i][0].transcript);
 				isSpeechDown = check_movement(down_words,event.results[i][0].transcript);
+				isSpeechBoom = check_movement(boom_words,event.results[i][0].transcript);
 			}else{
 				console.log(event.results[i][0].transcript);
 				isSpeechShoot = check_movement(shoot_words,event.results[i][0].transcript);
 				isSpeechUp = check_movement(up_words,event.results[i][0].transcript);
 				isSpeechDown = check_movement(down_words,event.results[i][0].transcript);
+				isSpeechBoom = check_movement(boom_words,event.results[i][0].transcript);
 			}
 		}
 		recognition.abort();
@@ -78,6 +85,11 @@ GamePlay.prototype.create = function() {
 	this.ENEMY_DELAY = 3000; // milliseconds (10 bullets/second)
 	this.ENEMY_SPEED = 100; // pixels/second
 	this.NUMBER_OF_ENEMIES = 20;
+	
+	this.BOOM_DELAY = 1000;
+
+	this.bigBoomTimes = 3;
+
 
 	// Create an object representing our player
 	this.player = this.game.add.sprite(this.game.world.width - 4, this.game.world.height / 2, 'player');
@@ -203,6 +215,16 @@ GamePlay.prototype.create = function() {
 			);
 	this.gameText.anchor.setTo(0.5, 0.5);
 
+	// Create a white rectangle that we'll use to represent the flash
+	this.flash = this.game.add.graphics(0, 0);
+	this.flash.beginFill(0xffffff, 1);
+	this.flash.drawRect(-10, -10, this.game.width + 20, this.game.height + 20);
+	this.flash.endFill();
+	this.flash.alpha = 0;
+
+
+	// Make the world a bit bigger than the stage so we can shake the camera
+	this.game.world.setBounds(-10, -10, this.game.width + 20, this.game.height + 20);
 };
 
 GamePlay.prototype.shootBullet = function() {
@@ -308,6 +330,42 @@ GamePlay.prototype.shootEnemy = function() {
 	}
 };
 
+//Big Boom and remove all enemies
+GamePlay.prototype.bigBoom = function() {
+	if (this.lastBoomAt === undefined) this.lastBoomAt = 0;
+	if (this.game.time.now - this.lastBoomAt < this.BOOM_DELAY) return;
+	this.lastBoomAt = this.game.time.now;
+
+	if (this.bigBoomTimes <= 0)
+		return ;
+
+	this.game.camera.y = 0;
+	this.game.add.tween(this.game.camera)
+		.to({ y: -10 }, 40, Phaser.Easing.Sinusoidal.InOut, false, 0, 5, true)
+		.start();
+	// Create the flash
+	this.flash.alpha = 1;
+	this.game.add.tween(this.flash)
+		.to({ alpha: 0 }, 100, Phaser.Easing.Cubic.In)
+		.start();
+
+	//Remove all birds.
+	var enemy = this.enemyPool.getFirstAlive();
+	while (enemy != null) {
+		score++;
+		enemy.kill();
+		enemy = this.enemyPool.getFirstAlive();
+	}
+	//Remove all rocks.
+	var enemy = this.rockPool.getFirstAlive();
+	while (enemy != null) {
+		enemy.kill();
+		enemy = this.rockPool.getFirstAlive();
+	}
+
+	this.bigBoomTimes--;
+}
+
 // The update() method is called every frame
 GamePlay.prototype.update = function() {
 	if (gameState == GAME_OVER) {
@@ -320,13 +378,19 @@ GamePlay.prototype.update = function() {
 	}
 
 	if (this.game.time.fps !== 0) {
-		this.fpsText.setText(this.game.time.fps + ' FPS' + ' Score:' + score);
+		this.fpsText.setText(this.game.time.fps + ' FPS' + '\nScore:' + score + '\nBig Boom Times: ' + this.bigBoomTimes);
 	}
 
 	// Shoot a bullet
-	if (this.game.input.activePointer.isDown || this.spaceInputIsActive() || isSpeechShoot) {
+	if (this.spaceInputIsActive() || isSpeechShoot) {
 		this.shootBullet();
-    isSpeechShoot = false;
+		isSpeechShoot = false;
+	}
+
+	// Big Boom
+	if (this.game.input.activePointer.isDown || isSpeechBoom) {
+		this.bigBoom();
+		isSpeechBoom = false;
 	}
 
 	// Shoot an enemy
@@ -401,7 +465,7 @@ GamePlay.prototype.update = function() {
 		this.player.y -= this.game.world.height / 4;
 		isSpeechUp = false;
 		//Bundary Condition
-		if (this.player.y < this.game.world.height)
+		if (this.player.y < 0)
 			this.player.y += this.game.world.height / 4;
 	} else if (isSpeechDown) {
 		// If the RIGHT key is down, set the player velocity to move right
@@ -484,6 +548,7 @@ GamePlay.prototype.getExplosion = function(x, y) {
 
 	// Play the animation
 	explosion.animations.play('boom');
+
 
 	// Return the explosion itself in case we want to do anything else with it
 	return explosion;
