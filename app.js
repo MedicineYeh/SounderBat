@@ -10,6 +10,9 @@ var express = require('express')
   , fs = require('fs')
   , publicPath = './public'
   , home = require('./routes/home')
+  , contact = require('./routes/contact')
+  , about = require('./routes/about')
+  , game = require('./routes/game')
   , https = require('https')
   , path = require('path');
 
@@ -41,6 +44,9 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 app.post('/db', db.query);
 app.post('/home', home.home);
+app.post('/about', about.about);
+app.post('/contact', contact.contact);
+app.post('/game',game.game);
 
 https.createServer(options , app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
