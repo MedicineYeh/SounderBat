@@ -22,6 +22,7 @@ SounderBat
 * [Phaser](https://github.com/photonstorm/phaser)
 * [jQuery](https://github.com/jquery/jquery)
 * [monk](https://github.com/LearnBoost/monk)
+* [jade](https://github.com/visionmedia/jade)
 
 ### Installation and Running
 
