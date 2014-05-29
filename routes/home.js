@@ -11,8 +11,8 @@ exports.home = function(req, res)
     '</p>' +
     '<p>' +
       '<ul>' + 
-        '<li type="disc">鳥：若以棒球擊中目標，即可獲得一分</li>' +
-        '<li type="disc">隕石：無法以棒球擊碎</li>' +
+        '<li type="disc"><img src="img/bird.jpg" width="60px"></img>：若以棒球擊中目標，即可獲得一分</li>' +
+        '<li type="disc"><img src="img/rock.jpg" width="60px"></img>：無法以棒球擊碎</li>' +
       '</ul>' +
     '</p>' +
 
