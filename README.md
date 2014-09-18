@@ -33,7 +33,7 @@ SounderBat
 5. Create directory for database by `mkdir db` in repository folder.
 6. Run `npm install` in repository folder.
 7. Run `bower install` in repository folder.
-8. Run mongodb by using `mongod -dbpath ./db`.
+8. Run mongodb by using `mongod -dbpath ./db &`.
 9. Run `grunt` in repository folder.
 10. Use Chrome oprn URL (Remember. It's httpSSSSSSSSS!!!!) : https://[IP Address]:3000/
 
