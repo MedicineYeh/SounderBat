@@ -35,7 +35,7 @@ SounderBat
 7. Run `bower install` in repository folder.
 8. Run mongodb by using `mongod -dbpath ./db`.
 9. Run `grunt` in repository folder.
-
+10. Use Chrome oprn URL (Remember. It's httpSSSSSSSSS!!!!) : https://[IP Address]:3000/
 
 ### Tutorial of Programing HTML5 game
 * [Game Machine](http://gamemechanicexplorer.com/)
