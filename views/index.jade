@@ -1,6 +1,6 @@
 extends layout
 block content
-  script
+  script.
     $.post('/home',"",function(data){
               $("#HTML_content").html(data);
     });
